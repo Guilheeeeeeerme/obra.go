@@ -44,9 +44,11 @@ module.exports = function(module){
 		setSize();
 		$(window).resize($scope.setSize);
 
+		$scope.isOnQuest = false;
+
 		function hasNewLocation(position){
 
-			if($scope.isOnQuest != true){
+			if(!$scope.isOnQuest){
 
 				$scope.center= null;
 
