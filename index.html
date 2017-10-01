@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Obra Go</title>
+
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/font-awesome/css/font-awesome.min.css">
+
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body ng-app="app">
+
+		<div 
+		class="container-fluid no-padding no-margin" 
+		ng-include="'./app/main/main.view.html'" 
+		ng-controller="MainController as controller">
+		</div>
+
+	<script type="text/javascript" src="bundle.js"></script>
+
+</body>
+</html>

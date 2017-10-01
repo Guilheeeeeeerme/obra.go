@@ -1,0 +1,52 @@
+<openlayers ng-if="size" ol-center="center" height="{{size.height}}px" width="{{size.width}}px" ol-defaults="defaults">
+
+	<ol-marker lat="you.lat" lon="you.lon"  ol-label="you.label" ol-style="you.style"></ol-marker>
+	
+	<ol-marker ng-repeat="estagio in runningQuest.estagios" class="ol-marker" value="{{$index}}" lat="estagio.latitude" lon="estagio.longitude" ></ol-marker>
+
+</openlayers>
+
+<!-- 
+<ng-camera
+    capture-message="Cheeeese!"
+    countdown="3"
+    output-height="160"
+    output-width="213"
+    viewer-height="320"
+    viewer-width="426"
+    crop-height="90"
+    crop-width="120"
+    image-format="jpeg"
+    jpeg-quality="100"
+    action-message="Take picture"
+    snapshot="vm.picture"
+    flash-fallback-url="/vendors/webcamjs/webcam.swf"
+    overlay-url="/overlay.png"
+    shutter-url="/shutter.mp3"
+></ng-camera> -->
+
+
+<div class="_button-center">
+	<i class="fa fa-bars " 
+	ng-click="controller.actionButtonOpenQuests()"
+	aria-hidden="true"></i>
+</div>
+
+<i class="fa fa-shopping-bag _button _button-left" 
+	aria-hidden="true" 
+	ng-click="controller.actionButtonOpenInventario()">
+</i>
+
+<i class="fa fa-users _button _button-right" 
+	aria-hidden="true" 
+	ng-click="controller.actionButtonOpenFriends()">
+</i>
+
+<div ng-include="'./app/main/inventario.view.html'"></div>
+<div ng-include="'./app/main/friends.view.html'"></div>
+<div ng-include="'./app/main/quests.view.html'"></div>
+
+<!-- 
+<i class="fa fa-  _button-right _button-quests" aria-hidden="true"></i>	
+
+ -->
