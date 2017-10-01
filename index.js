@@ -8,6 +8,7 @@ var bootstrap = require('bootstrap');
 var angular = require('angular');
 window.Webcam =require('webcamjs')
 var ngCamera = require('ng-camera');
+var ngGeolocation = require('./js/ngGeolocation.min.js');
 var angularSanitize = require('angular-sanitize')
 var angularOL = require('angular-openlayers-directive');
 

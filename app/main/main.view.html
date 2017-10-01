@@ -1,8 +1,8 @@
-<openlayers ng-if="size" ol-center="center" height="{{size.height}}px" width="{{size.width}}px" ol-defaults="defaults">
+<openlayers ng-if="size && center" ol-center="center" height="{{size.height}}px" width="{{size.width}}px" ol-defaults="defaults">
 
 	<ol-marker lat="you.lat" lon="you.lon"  ol-label="you.label" ol-style="you.style"></ol-marker>
 	
-	<ol-marker ng-repeat="estagio in runningQuest.estagios" class="ol-marker" value="{{$index}}" lat="estagio.latitude" lon="estagio.longitude" ></ol-marker>
+	<ol-marker ng-repeat="estagio in runningQuest.estagios" lat="estagio.latitude" lon="estagio.longitude" ></ol-marker>
 
 </openlayers>
 

@@ -29,46 +29,50 @@ module.exports = function(module){
             }
         };
 
+	    $scope.defaults = {
+            view: {
+                maxZoom: 20,
+                minZoom: 15
+            }
+        }
+
         $geolocation.getCurrentPosition({
-            timeout: 60000
-        }).then(function(position) {
-        	$scope.myPosition = position;
-        	console.log(position);
-        });
+            timeout: 5000
+        }).then(hasNewLocation);
 
 		loadQuests();
 		setSize();
 		$(window).resize($scope.setSize);
 
-		angular.extend($scope, {
-		    
-		    center: {
-		        lat: -22.4123324,
-		        lon: -45.4517559,
-		        zoom: 15
-		    },
+		function hasNewLocation(position){
 
-		    you: {
-		        lat: -22.4123324,
-		        lon: -45.4517559,
+			if($scope.isOnQuest != true){
+
+				$scope.center= null;
+
+				$scope.center = {
+			        lat: position.coords.latitude,
+			        lon: position.coords.longitude,
+			        zoom: 15
+			    }
+
+			}
+
+		    $scope.you = {
+		        lat: position.coords.latitude,
+		        lon: position.coords.longitude,
                 label: {
                     message: 'Você',
                     show: true,
                     showOnMouseOver: true
                 },
                 style: custom_style
-            },
-
-		    defaults: {
-                view: {
-                    maxZoom: 20,
-                    minZoom: 15
-                }
             }
 
-		});
+		}
 
-		$('.ol-marker').click(actionButtonEstagio)
+
+		$('.ol-marker *').click(actionButtonEstagio)
 
 		function actionButtonEstagio(){
 			console.log(arguments);
@@ -79,15 +83,25 @@ module.exports = function(module){
 		}
 
 		function onQuestsReady (response){
-
 			$scope.dados = {
 				quests: response.data
 			}
+
+			$scope.center= null;
 		}
 
 		function actionButtonPartiu(quest){
 			$('#questModal').modal('hide');
 			$scope.runningQuest = quest;
+
+			$scope.center = {
+		        lat: quest.estagios[0].latitude,
+		        lon: quest.estagios[0].longitude,
+		        zoom: 15
+		    }
+
+			$scope.isOnQuest = true;
+
 		}
 
 		function actionButtonOpenInventario(){
