@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "browserify index.js -o bundle.js",
+    "delete-bundle": "rm -rf bundle.js || del /q bundle.js ", 
+    "build": "npm run delete-bundle && browserify index.js -o bundle.js",
     "prestart": "npm run build",
     "start": "http-server . -p 8080"
   },

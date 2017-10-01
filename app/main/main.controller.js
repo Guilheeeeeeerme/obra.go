@@ -63,6 +63,8 @@ module.exports = function(module){
 				});
 
 				Webcam.attach( '#my_camera' );
+			}else{
+
 			}
 		}
 
