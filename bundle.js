@@ -5,9 +5,9 @@ module.exports = function(module){
 	
 	module.controller('MainController', MainController);
 
-	MainController.$inject = ['$scope', 'QuestService'];
+	MainController.$inject = ['$scope', 'QuestService', '$geolocation'];
 
-	function MainController($scope, QuestService) {
+	function MainController($scope, QuestService, $geolocation) {
 
 		var vm = this;
 
@@ -29,6 +29,13 @@ module.exports = function(module){
                 }
             }
         };
+
+        $geolocation.getCurrentPosition({
+            timeout: 60000
+        }).then(function(position) {
+        	$scope.myPosition = position;
+        	console.log(position);
+        });
 
 		loadQuests();
 		setSize();
@@ -199,7 +206,7 @@ var ngCamera = require('ng-camera');
 var angularSanitize = require('angular-sanitize')
 var angularOL = require('angular-openlayers-directive');
 
-var module = angular.module('app', ['openlayers-directive', 'camera']);
+var module = angular.module('app', ['openlayers-directive', 'camera', 'ngGeolocation']);
 
 var QuestService = require('./app/service/quest.service.js');
 var questService = new QuestService(module);
