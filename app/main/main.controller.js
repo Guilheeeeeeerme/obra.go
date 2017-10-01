@@ -125,7 +125,11 @@ module.exports = function(module){
 		}
 
 		function actionButtonPartiu(quest){
+
+			console.log(quest);
+
 			$('#questModal').modal('hide');
+			
 			$scope.runningQuest = quest;
 
 			$scope.center = {
@@ -147,6 +151,7 @@ module.exports = function(module){
 		}
 
 		function actionButtonOpenQuests(){
+			loadQuests();
 			$('#questModal').modal('show');
 		}
 
