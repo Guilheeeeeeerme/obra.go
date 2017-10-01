@@ -6,17 +6,23 @@
 
 </openlayers>
 
-<div class="_button-center-top" ng-if="runningQuest" ng-init="cameraIsOpen = false" ng-click="cameraIsOpen = !cameraIsOpen">
+<div class="_button-center-top" ng-if="runningQuest" ng-click="controller.openOrCloseCamera()">
 	{{ (cameraIsOpen)?'Close':'Open' }} Camera
 
-	<ng-camera ng-if="cameraIsOpen"
+	<div id="my_camera" ng-show="cameraIsOpen"></div>
+
+	<button class="btn btn-sm btn-default" ng-show="cameraIsOpen" ng-click="controller.take_snapshot()">
+		Coletar Pista
+	</button>
+
+	<!-- <ng-camera ng-if="cameraIsOpen"
 	    capture-message="Cheeeese!"
 	    countdown="3"
 	    image-format="jpeg"
 	    jpeg-quality="100"
 	    action-message="Take picture"
 	    snapshot="picture"
-	></ng-camera>
+	></ng-camera> -->
 	
 
 </div>

@@ -14,8 +14,10 @@ module.exports = function(module){
 		vm.actionButtonOpenFriends = actionButtonOpenFriends;
 		vm.actionButtonOpenQuests = actionButtonOpenQuests;
 		vm.actionButtonPartiu = actionButtonPartiu;
+		vm.take_snapshot = take_snapshot;
+		vm.openOrCloseCamera = openOrCloseCamera;
 
-		vm.picture;
+		$scope.pictures = [];
 
 		$scope.setSize = setSize;
 
@@ -40,7 +42,29 @@ module.exports = function(module){
 
         $geolocation.getCurrentPosition().then(hasNewLocation);
 
+		function take_snapshot() {
 
+			// take snapshot and get image data
+			Webcam.snap( function(data_uri) {
+				$scope.pictures.push(data_uri);
+			});
+		}
+
+		function openOrCloseCamera(){
+			$scope.cameraIsOpen = !$scope.cameraIsOpen;
+
+			if($scope.cameraIsOpen){
+
+				Webcam.set({
+					width: 320,
+					height: 240,
+					image_format: 'jpeg',
+					jpeg_quality: 90
+				});
+
+				Webcam.attach( '#my_camera' );
+			}
+		}
 
 		loadQuests();
 		setSize();

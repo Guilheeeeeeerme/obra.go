@@ -15,8 +15,10 @@ module.exports = function(module){
 		vm.actionButtonOpenFriends = actionButtonOpenFriends;
 		vm.actionButtonOpenQuests = actionButtonOpenQuests;
 		vm.actionButtonPartiu = actionButtonPartiu;
+		vm.take_snapshot = take_snapshot;
+		vm.openOrCloseCamera = openOrCloseCamera;
 
-		vm.picture;
+		$scope.pictures = [];
 
 		$scope.setSize = setSize;
 
@@ -41,7 +43,29 @@ module.exports = function(module){
 
         $geolocation.getCurrentPosition().then(hasNewLocation);
 
+		function take_snapshot() {
 
+			// take snapshot and get image data
+			Webcam.snap( function(data_uri) {
+				$scope.pictures.push(data_uri);
+			});
+		}
+
+		function openOrCloseCamera(){
+			$scope.cameraIsOpen = !$scope.cameraIsOpen;
+
+			if($scope.cameraIsOpen){
+
+				Webcam.set({
+					width: 320,
+					height: 240,
+					image_format: 'jpeg',
+					jpeg_quality: 90
+				});
+
+				Webcam.attach( '#my_camera' );
+			}
+		}
 
 		loadQuests();
 		setSize();
@@ -187,7 +211,7 @@ module.exports = function(module){
         } ]);
 
 
-},{"angular":11}],2:[function(require,module,exports){
+},{"angular":10}],2:[function(require,module,exports){
 module.exports = function(module){
 
 	module.service('QuestService', QuestService);
@@ -223,8 +247,8 @@ window.Tether  = require('Tether');
 var bootstrap = require('bootstrap');
 
 var angular = require('angular');
-var ngCamera = require('./js/ng-camera.js');
 
+var ngCamera = require('ng-camera');
 var ngGeolocation = require('./js/ngGeolocation.min.js');
 var angularSanitize = require('angular-sanitize')
 var angularOL = require('angular-openlayers-directive');
@@ -236,12 +260,9 @@ var questService = new QuestService(module);
 
 var MainController = require('./app/main/main.controller.js');
 var mainController = new MainController(module);
-},{"./app/main/main.controller.js":1,"./app/service/quest.service.js":2,"./js/ng-camera.js":4,"./js/ngGeolocation.min.js":5,"Tether":6,"angular":11,"angular-openlayers-directive":7,"angular-sanitize":9,"bootstrap":12,"jquery":13}],4:[function(require,module,exports){
-!function(t){"use strict";t.module("camera",[])}(angular),function(t){"use strict";function e(t,e){function o(o){o.libraryLoaded=!1,o.cameraLive=!1,o.activeCountdown=!1,void 0===o.viewerHeight&&(o.viewerHeight="auto"),void 0===o.viewerWidth&&(o.viewerWidth="auto"),void 0===o.outputHeight&&(o.outputHeight=o.viewerHeight),void 0===o.outputWidth&&(o.outputWidth=o.viewerWidth),(void 0===o.cropHeight||void 0===o.cropWidth)&&(o.cropHeight=!1,o.cropWith=!1),Webcam.set({width:o.viewerWidth,height:o.viewerHeight,dest_width:o.outputWidth,dest_height:o.outputHeight,crop_width:o.cropWidth,crop_height:o.cropHeight,image_format:o.imageFormat,jpeg_quality:o.jpegQuality,force_flash:!1}),"undefined"!==o.flashFallbackUrl&&Webcam.setSWFLocation(o.flashFallbackUrl),Webcam.attach("#ng-camera-feed"),Webcam.on("load",function(){console.info("library loaded"),o.$apply(function(){o.libraryLoaded=!0})}),Webcam.on("live",function(){console.info("camera live"),o.$apply(function(){o.cameraLive=!0})}),Webcam.on("error",function(t){console.error("WebcameJS directive ERROR: ",t)}),void 0!==o.shutterUrl&&(o.shutter=new Audio,o.shutter.autoplay=!1,o.shutter.src=navigator.userAgent.match(/Firefox/)?o.shutterUrl.split(".")[0]+".ogg":o.shutterUrl),void 0!==o.countdown&&(o.countdownTime=1e3*parseInt(o.countdown),o.countdownText=parseInt(o.countdown)),o.countdownStart=function(){o.activeCountdown=!0,o.countdownPromise=t.defer(),o.countdownTick=setInterval(function(){return o.$apply(function(){var t;t=parseInt(o.countdownText)-1,0===t?(o.countdownText=null!=o.captureMessage?o.captureMessage:"GO!",clearInterval(o.countdownTick),o.countdownPromise.resolve()):o.countdownText=t})},1e3)},o.getSnapshot=function(){void 0!==o.countdown?(o.countdownStart(),o.countdownPromise.promise.then(function(){e(function(){o.activeCountdown=!1,o.countdownText=parseInt(o.countdown)},2e3),void 0!==o.shutterUrl&&o.shutter.play(),Webcam.snap(function(t){o.snapshot=t})})):(void 0!==o.shutterUrl&&o.shutter.play(),Webcam.snap(function(t){o.snapshot=t}))},o.$on("$destroy",function(){Webcam.reset()})}return{restrict:"E",scope:{actionMessage:"@",captureMessage:"@",countdown:"@",flashFallbackUrl:"@",overlayUrl:"@",outputHeight:"@",outputWidth:"@",shutterUrl:"@",viewerHeight:"@",viewerWidth:"@",cropHeight:"@",cropWidth:"@",imageFormat:"@",jpegQuality:"@",snapshot:"="},template:['<div class="ng-camera">','<div class="ng-camera-countdown" ng-if="countdown" ng-show="activeCountdown">','<p class="tick">{{countdownText}}</p>',"</div>",'<div class="ng-camera-stack">','<img class="ng-camera-overlay" ng-if="overlayUrl" ng-show="cameraLive" ng-src="{{overlayUrl}}" alt="overlay">','<div id="ng-camera-feed"></div>',"</div>",'<button id="ng-camera-action" ng-click="getSnapshot()">{{actionMessage}}</button>',"</div>"].join(""),link:o}}t.module("camera").directive("ngCamera",e),e.$inject=["$q","$timeout"]}(angular);
-
-},{}],5:[function(require,module,exports){
+},{"./app/main/main.controller.js":1,"./app/service/quest.service.js":2,"./js/ngGeolocation.min.js":4,"Tether":5,"angular":10,"angular-openlayers-directive":6,"angular-sanitize":8,"bootstrap":11,"jquery":12,"ng-camera":13}],4:[function(require,module,exports){
 "use strict";angular.module("ngGeolocation",[]).factory("$geolocation",["$rootScope","$window","$q",function(a,b,c){function d(){return"geolocation"in b.navigator}var e={getCurrentPosition:function(e){var f=c.defer();return d()?b.navigator.geolocation.getCurrentPosition(function(b){a.$apply(function(){f.resolve(b)})},function(b){a.$apply(function(){f.reject({error:b})})},e):f.reject({error:{code:2,message:"This web browser does not support HTML5 Geolocation"}}),f.promise},watchPosition:function(c){d()?this.watchId||(this.watchId=b.navigator.geolocation.watchPosition(function(b){a.$apply(function(){e.position=b})},function(b){a.$apply(function(){e.position={error:b}})},c)):e.position={error:{code:2,message:"This web browser does not support HTML5 Geolocation"}}},clearWatch:function(){this.watchId&&(b.navigator.geolocation.clearWatch(this.watchId),delete this.watchId)},position:void 0};return e}]);
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /*! tether 1.4.0 */
 
 (function(root, factory) {
@@ -2054,7 +2075,7 @@ return Tether;
 
 }));
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (root, factory) {
     if (typeof require === 'function' && typeof exports === 'object') {
         // CommonJS
@@ -4636,7 +4657,7 @@ angular.module('openlayers-directive').factory('olMapDefaults', ["$q", "olHelper
 }]);
 
 }));
-},{"openlayers":14}],8:[function(require,module,exports){
+},{"openlayers":14}],7:[function(require,module,exports){
 /**
  * @license AngularJS v1.6.6
  * (c) 2010-2017 Google, Inc. http://angularjs.org
@@ -5444,11 +5465,11 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
 
 })(window, window.angular);
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 require('./angular-sanitize');
 module.exports = 'ngSanitize';
 
-},{"./angular-sanitize":8}],10:[function(require,module,exports){
+},{"./angular-sanitize":7}],9:[function(require,module,exports){
 /**
  * @license AngularJS v1.6.6
  * (c) 2010-2017 Google, Inc. http://angularjs.org
@@ -39338,11 +39359,11 @@ $provide.value("$locale", {
 })(window);
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":10}],12:[function(require,module,exports){
+},{"./angular":9}],11:[function(require,module,exports){
 /*!
  * Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
  * Copyright 2011-2017 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
@@ -42879,7 +42900,7 @@ var Popover = function ($) {
 
 }();
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -53133,6 +53154,9 @@ if ( !noGlobal ) {
 
 return jQuery;
 } );
+
+},{}],13:[function(require,module,exports){
+!function(t){"use strict";t.module("camera",[])}(angular),function(t){"use strict";function e(t,e){function o(o){o.libraryLoaded=!1,o.cameraLive=!1,o.activeCountdown=!1,void 0===o.viewerHeight&&(o.viewerHeight="auto"),void 0===o.viewerWidth&&(o.viewerWidth="auto"),void 0===o.outputHeight&&(o.outputHeight=o.viewerHeight),void 0===o.outputWidth&&(o.outputWidth=o.viewerWidth),(void 0===o.cropHeight||void 0===o.cropWidth)&&(o.cropHeight=!1,o.cropWith=!1),Webcam.set({width:o.viewerWidth,height:o.viewerHeight,dest_width:o.outputWidth,dest_height:o.outputHeight,crop_width:o.cropWidth,crop_height:o.cropHeight,image_format:o.imageFormat,jpeg_quality:o.jpegQuality,force_flash:!1}),"undefined"!==o.flashFallbackUrl&&Webcam.setSWFLocation(o.flashFallbackUrl),Webcam.attach("#ng-camera-feed"),Webcam.on("load",function(){console.info("library loaded"),o.$apply(function(){o.libraryLoaded=!0})}),Webcam.on("live",function(){console.info("camera live"),o.$apply(function(){o.cameraLive=!0})}),Webcam.on("error",function(t){console.error("WebcameJS directive ERROR: ",t)}),void 0!==o.shutterUrl&&(o.shutter=new Audio,o.shutter.autoplay=!1,o.shutter.src=navigator.userAgent.match(/Firefox/)?o.shutterUrl.split(".")[0]+".ogg":o.shutterUrl),void 0!==o.countdown&&(o.countdownTime=1e3*parseInt(o.countdown),o.countdownText=parseInt(o.countdown)),o.countdownStart=function(){o.activeCountdown=!0,o.countdownPromise=t.defer(),o.countdownTick=setInterval(function(){return o.$apply(function(){var t;t=parseInt(o.countdownText)-1,0===t?(o.countdownText=null!=o.captureMessage?o.captureMessage:"GO!",clearInterval(o.countdownTick),o.countdownPromise.resolve()):o.countdownText=t})},1e3)},o.getSnapshot=function(){void 0!==o.countdown?(o.countdownStart(),o.countdownPromise.promise.then(function(){e(function(){o.activeCountdown=!1,o.countdownText=parseInt(o.countdown)},2e3),void 0!==o.shutterUrl&&o.shutter.play(),Webcam.snap(function(t){o.snapshot=t})})):(void 0!==o.shutterUrl&&o.shutter.play(),Webcam.snap(function(t){o.snapshot=t}))},o.$on("$destroy",function(){Webcam.reset()})}return{restrict:"E",scope:{actionMessage:"@",captureMessage:"@",countdown:"@",flashFallbackUrl:"@",overlayUrl:"@",outputHeight:"@",outputWidth:"@",shutterUrl:"@",viewerHeight:"@",viewerWidth:"@",cropHeight:"@",cropWidth:"@",imageFormat:"@",jpegQuality:"@",snapshot:"="},template:['<div class="ng-camera">','<div class="ng-camera-countdown" ng-if="countdown" ng-show="activeCountdown">','<p class="tick">{{countdownText}}</p>',"</div>",'<div class="ng-camera-stack">','<img class="ng-camera-overlay" ng-if="overlayUrl" ng-show="cameraLive" ng-src="{{overlayUrl}}" alt="overlay">','<div id="ng-camera-feed"></div>',"</div>",'<button id="ng-camera-action" ng-click="getSnapshot()">{{actionMessage}}</button>',"</div>"].join(""),link:o}}t.module("camera").directive("ngCamera",e),e.$inject=["$q","$timeout"]}(angular);
 
 },{}],14:[function(require,module,exports){
 (function (global){
