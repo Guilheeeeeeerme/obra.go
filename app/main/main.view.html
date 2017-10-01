@@ -6,24 +6,21 @@
 
 </openlayers>
 
-<!-- 
-<ng-camera
-    capture-message="Cheeeese!"
-    countdown="3"
-    output-height="160"
-    output-width="213"
-    viewer-height="320"
-    viewer-width="426"
-    crop-height="90"
-    crop-width="120"
-    image-format="jpeg"
-    jpeg-quality="100"
-    action-message="Take picture"
-    snapshot="vm.picture"
-    flash-fallback-url="/vendors/webcamjs/webcam.swf"
-    overlay-url="/overlay.png"
-    shutter-url="/shutter.mp3"
-></ng-camera> -->
+<div class="_button-center-top" ng-if="runningQuest" ng-init="cameraIsOpen = false" ng-click="cameraIsOpen = !cameraIsOpen">
+	{{ (cameraIsOpen)?'Close':'Open' }} Camera
+
+	<ng-camera ng-if="cameraIsOpen"
+	    capture-message="Cheeeese!"
+	    countdown="3"
+	    image-format="jpeg"
+	    jpeg-quality="100"
+	    action-message="Take picture"
+	    snapshot="picture"
+	></ng-camera>
+	
+
+</div>
+
 
 
 <div class="_button-center">

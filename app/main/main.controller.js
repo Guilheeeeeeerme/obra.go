@@ -4,9 +4,9 @@ module.exports = function(module){
 	
 	module.controller('MainController', MainController);
 
-	MainController.$inject = ['$scope', 'QuestService', '$geolocation'];
+	MainController.$inject = ['$scope', 'QuestService', '$geolocation', '$timeout'];
 
-	function MainController($scope, QuestService, $geolocation) {
+	function MainController($scope, QuestService, $geolocation, $timeout) {
 
 		var vm = this;
 
@@ -14,6 +14,8 @@ module.exports = function(module){
 		vm.actionButtonOpenFriends = actionButtonOpenFriends;
 		vm.actionButtonOpenQuests = actionButtonOpenQuests;
 		vm.actionButtonPartiu = actionButtonPartiu;
+
+		vm.picture;
 
 		$scope.setSize = setSize;
 
@@ -36,9 +38,9 @@ module.exports = function(module){
             }
         }
 
-        $geolocation.getCurrentPosition({
-            timeout: 5000
-        }).then(hasNewLocation);
+        $geolocation.getCurrentPosition().then(hasNewLocation);
+
+
 
 		loadQuests();
 		setSize();
@@ -70,6 +72,10 @@ module.exports = function(module){
                 },
                 style: custom_style
             }
+
+	        $timeout(function(){
+		        $geolocation.getCurrentPosition().then(hasNewLocation);
+	        }, 5000);
 
 		}
 

@@ -44,3 +44,14 @@ body{
 	padding: 10px;
 	font-size: 2em;
 }
+
+._button-center-top{
+	top: 0px;
+	width: 100%;
+	padding: 10px;
+	text-align: center;
+	font-size: 2em;
+    position: fixed;	
+	background-color: #ef7241;
+    color: #fff;
+}

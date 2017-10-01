@@ -6,7 +6,7 @@ module.exports = function(module){
 
 	function QuestService($http){
 
-		var url = 'https://159.203.178.207/';
+		var url = 'http://159.203.178.207/';
 
 		return {
 			getQuests: getQuests
